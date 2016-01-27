@@ -15,7 +15,7 @@
 
 typedef std::string string;
 
-bool corrupt(string input_s, string output_s, float strength, long begin, long end, bool verbose)
+bool corrupt(string input_s, string output_s, float strength, unsigned long begin, unsigned long end, bool verbose)
 {
 	char *read_buffer = new char;
 	std::ifstream input;
@@ -27,7 +27,7 @@ bool corrupt(string input_s, string output_s, float strength, long begin, long e
 		unsigned long file_len = input.tellg();
 		input.seekg(0);
 
-		char output_buffer[file_len];
+		std::vector<char> output_buffer;
 
 		std::mt19937 generator;
 		{
@@ -39,7 +39,7 @@ bool corrupt(string input_s, string output_s, float strength, long begin, long e
 
 		while (true)
 		{
-			long pos = input.tellg();
+			unsigned long pos = input.tellg();
 			*read_buffer = (char)input.get();
 
 			if (input.eof())
@@ -53,12 +53,12 @@ bool corrupt(string input_s, string output_s, float strength, long begin, long e
 				}
 			}
 
-			output_buffer[pos] = *read_buffer;
+			output_buffer.push_back(*read_buffer);
 		}
 
 		input.close();
 		output.seekp(0);
-		output.write(output_buffer, file_len);
+		output.write(&output_buffer[0], file_len);
 		output.close();
 	}
 	catch (std::exception &e)

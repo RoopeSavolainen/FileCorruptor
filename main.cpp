@@ -33,8 +33,8 @@ int main(int argc, char** argv)
 	output_s = (output == input_args.end() ? input_s : output->second);
 	bool verbose = (verbosity != input_args.end());
 	float strength_f = (strength == input_args.end() ? 0.1 : atof(strength->second.c_str()));
-	long begin_i = (begin == input_args.end() ? 0 : atoi(begin->second.c_str()));
-	long end_i = (end == input_args.end() ? 0 : atoi(end->second.c_str()));
+	unsigned long begin_i = (begin == input_args.end() ? 0 : atoi(begin->second.c_str()));
+	unsigned long end_i = (end == input_args.end() ? 0 : atoi(end->second.c_str()));
 
 	//Corrupt the file
 	if (corrupt(input_s, output_s, strength_f, begin_i, end_i, verbose))
