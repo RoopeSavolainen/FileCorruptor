@@ -1,6 +1,7 @@
 //This is where most of the ugly code is
 
 #include <iostream>
+#include <fstream>
 
 #include <vector>
 #include <list>
@@ -10,7 +11,68 @@
 #include <algorithm>
 #include <exception>
 
+#include <random>
+
 typedef std::string string;
+
+bool corrupt(string input_s, string output_s, float strength, long begin, long end, bool verbose)
+{
+	char *read_buffer = new char;
+	std::ifstream input;
+	std::ofstream output;
+	try
+	{
+		input.open(input_s, std::fstream::in | std::fstream::binary | std::fstream::ate);
+		output.open(output_s, std::fstream::out | std::fstream::binary | std::fstream::trunc);
+		unsigned long file_len = input.tellg();
+		input.seekg(0);
+
+		char output_buffer[file_len];
+
+		std::mt19937 generator;
+		{
+			std::random_device device;
+			generator.seed(device());
+		}
+		std::normal_distribution<float> offset_distribution(0.0, 35.0);
+		std::uniform_real_distribution<float> corruption_chance(0.0,1.0);
+
+		while (true)
+		{
+			long pos = input.tellg();
+			*read_buffer = (char)input.get();
+
+			if (input.eof())
+				break;
+
+			if (pos >= begin && pos <= file_len - end)
+			{
+				if (corruption_chance(generator) <= strength)
+				{
+					*read_buffer += (char)offset_distribution(generator);
+				}
+			}
+
+			output_buffer[pos] = *read_buffer;
+		}
+
+		input.close();
+		output.seekp(0);
+		output.write(output_buffer, file_len);
+		output.close();
+	}
+	catch (std::exception &e)
+	{
+		delete read_buffer;
+		std::cerr << "Failed to open the file!\n";
+		input.close();
+		output.close();
+		return false;
+	}
+	delete read_buffer;
+
+	return true;
+}
 
 std::map<string, string> parseArguments(int argc, char** argv)
 {
@@ -63,11 +125,8 @@ std::string usage(char** argv)
 	s += "Options:\n\t";
 	s += "-f, --input_file: File to corrupt\n\t-o, --output-file: Location to write the corrupted file to. (By default SOURCE_corrupted)\n\t";
 	//s += "-m, --method"
-	s += "-s, --strength: Set the probability of a byte being corrupted. Should be a floating point number between 0.0 and 1.0.\n\t";
+	s += "-s, --strength: Set the probability of a byte being corrupted. Should be a floating point number between 0.0 and 1.0. Default value is 0.1.\n\t";
 	s += "-b, --begin: Skip the first N bytes of a file when doing corruption.\n\t-e, --end: Same as begin, but skip trailing bytes.\n\t";
 	s += "-v, --verbose: Print additional information.\n";
 	return s;
 }
-
-void corrupt(float strength, int begin, int end)
-{}
