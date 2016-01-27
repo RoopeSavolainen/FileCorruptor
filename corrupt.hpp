@@ -23,7 +23,11 @@ bool corrupt(string input_s, string output_s, float strength, unsigned long begi
 	try
 	{
 		input.open(input_s, std::fstream::in | std::fstream::binary | std::fstream::ate);
-		output.open(output_s, std::fstream::out | std::fstream::binary | std::fstream::trunc);
+		if (!input.is_open())
+		{
+			throw std::exception();
+		}
+
 		unsigned long file_len = input.tellg();
 		input.seekg(0);
 
@@ -57,6 +61,8 @@ bool corrupt(string input_s, string output_s, float strength, unsigned long begi
 		}
 
 		input.close();
+		
+		output.open(output_s, std::fstream::out | std::fstream::binary | std::fstream::trunc);
 		output.seekp(0);
 		output.write(&output_buffer[0], file_len);
 		output.close();
