@@ -129,7 +129,7 @@ std::string usage(char** argv)
 	string s;
 	s = "Usage:\n\n" + string(argv[0]) + " -f SOURCE [-o DESTINATION] [-m METHOD] [-s STRENGTH] [-b FIRST-BYTE] [-e LAST-BYTE] [-v]\n\n";
 	s += "Options:\n\t";
-	s += "-f, --input_file: File to corrupt\n\t-o, --output-file: Location to write the corrupted file to. (By default SOURCE_corrupted)\n\t";
+	s += "-f, --input_file: File to corrupt\n\t-o, --output_file: Location to write the corrupted file to. (By default SOURCE_corrupted)\n\t";
 	//s += "-m, --method"
 	s += "-s, --strength: Set the probability of a byte being corrupted. Should be a floating point number between 0.0 and 1.0. Default value is 0.1.\n\t";
 	s += "-b, --begin: Skip the first N bytes of a file when doing corruption.\n\t-e, --end: Same as begin, but skip trailing bytes.\n\t";
