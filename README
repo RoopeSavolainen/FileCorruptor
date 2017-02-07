@@ -1,14 +1,14 @@
-**FileCorruptor**
+## FileCorruptor
 
-*Summary*
+# Summary
 This program corrupts files.
 You can get the basic usage guide by using the '-h' flag.
 
-*Installation*
+# Installation
 No dependencies apart from the standard C++ libs (minimum standard is C++0x).
 Just build with whatever compiler you like best. The program ships with a Makefile. After compilation move the binary to your PATH.
 
-*Usage*
+# Usage
 The program takes the following parameters:
 -f, --input_file:
 	The file to be corrupted. This is the only required parameter.
